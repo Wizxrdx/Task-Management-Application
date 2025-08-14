@@ -95,3 +95,11 @@ class TaskManager:
 
         self.database.delete_task(task_id)
         print(f'Task {task_id} deleted.')
+
+task_manager = None
+
+def get_task_manager(db):
+    global task_manager
+    if task_manager is None:
+        task_manager = TaskManager(db)
+    return task_manager

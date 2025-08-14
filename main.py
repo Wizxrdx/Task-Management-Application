@@ -1,4 +1,4 @@
-from src.task_manager import TaskManager
+from src.task_manager import get_task_manager
 from src.database import get_db
 
 def main():
@@ -6,8 +6,8 @@ def main():
         db = get_db()
     except Exception as e:
         exit(e)
-        
-    task_manager = TaskManager(db)
+
+    task_manager = get_task_manager(db)
 
     while True:
         print('[1] Add a new task')
