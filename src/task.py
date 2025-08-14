@@ -1,6 +1,13 @@
 from datetime import datetime
 from src.enums import Status, PriorityLevel
 from src.exceptions import TaskValidationError
+from src.validators import (
+    parse_description,
+    parse_due_date,
+    parse_title,
+    parse_priority,
+    parse_status
+)
 
 
 class Task:
@@ -30,7 +37,7 @@ class Task:
     def __str__(self):
         return (
             f'Task(id={self._id}, title={self._title!r}, due_date={self._due_date}, '
-            f'priority={self._priority_level}, status={self._status.name}, created={self._creation_timestamp})'
+            f'priority={self._priority.name}, status={self._status.name})'
         )
 
     @property
@@ -49,14 +56,7 @@ class Task:
 
     @title.setter
     def title(self, value: str):
-        if not isinstance(value, str):
-            raise TaskValidationError('Title must be a string')
-        value = value.strip()
-        if not value:
-            raise TaskValidationError('Title cannot be empty')
-        if len(value) > 255:
-            raise TaskValidationError('Title max length is 255 characters')
-        self._title = value
+        self._title = parse_title(value)
 
     @property
     def description(self):
@@ -64,14 +64,7 @@ class Task:
 
     @description.setter
     def description(self, value: str):
-        if value is None:
-            value = ""
-        if not isinstance(value, str):
-            raise TaskValidationError('Description must be a string')
-        value = value.strip()
-        if len(value) > 1000:
-            raise TaskValidationError('Description max length is 1000 characters')
-        self._description = value
+        self._description = parse_description(value)
 
     @property
     def due_date(self):
@@ -79,35 +72,23 @@ class Task:
 
     @due_date.setter
     def due_date(self, value: str):
-        if not isinstance(value, str):
-            raise TaskValidationError('due_date must be a string in YYYY-MM-DD format')
-        try:
-            dt = datetime.strptime(value, '%Y-%m-%d')
-        except ValueError as e:
-            raise TaskValidationError('due_date must be in YYYY-MM-DD format') from e
-        # store canonical ISO date only
-        self._due_date = dt.strftime('%Y-%m-%d')
+        self._due_date = parse_due_date(value)
 
     @property
     def priority(self):
-        return self._priority_level
+        return self._priority.value
 
     @priority.setter
     def priority(self, value: str | PriorityLevel):
-        if isinstance(value, PriorityLevel):
-            self._priority_level = value.value
-            return
-        if not isinstance(value, str):
-            raise TaskValidationError('Priority must be a string or PriorityLevel enum')
-        try:
-            self._priority_level = PriorityLevel(value).value
-        except ValueError as e:
-            allowed = ', '.join(p.value for p in PriorityLevel)
-            raise TaskValidationError(f'Priority must be one of: {allowed}') from e
+        self._priority = parse_priority(value)
 
     @property
     def status(self):
-        return self._status
+        return self._status.value
+
+    @status.setter
+    def status(self, value: Status):
+        self._status = parse_status(value)
 
     def mark_completed(self):
         if self._status is Status.COMPLETED:
