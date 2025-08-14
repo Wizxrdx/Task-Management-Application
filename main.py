@@ -7,8 +7,7 @@ def main():
     except Exception as e:
         exit(e)
         
-    task_manager = TaskManager()
-    task_manager.set_db(db)
+    task_manager = TaskManager(db)
 
     while True:
         print('[1] Add a new task')
