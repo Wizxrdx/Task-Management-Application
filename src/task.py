@@ -17,13 +17,11 @@ class Task:
         description: str,
         due_date: str,
         priority: str | PriorityLevel,
-        creation: datetime | str,
         status: Status = Status.PENDING,
         idx: int | None = None,
     ):
         self._id = idx
-        self._creation_timestamp = self._coerce_creation(creation)
-        self._status = self._validate_status(status)
+        self._status = status
         self._title = title
         self._description = description
         self._due_date = due_date
