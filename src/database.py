@@ -10,16 +10,21 @@ class Database:
             Connect to database and initialize tables database
         """
         load_dotenv()
-
-        print('Connecting to database...')
-        self.cnx = mysql.connector.connect(user='root', password=os.getenv("MYSQL_ROOT_PASSWORD"),
-                                    host='localhost',
-                                    database=os.getenv("MYSQL_DATABASE"))
-        print('Database Connected.')
+        self._connect_db()
 
         cursor = self.cnx.cursor()
         with open("./database.sql", "r") as f:
             cursor.execute(f.read())
+
+    def _connect_db(self):
+        print('Connecting to database...')
+        try:
+            self.cnx = mysql.connector.connect(user='root', password=os.getenv("MYSQL_ROOT_PASSWORD"),
+                                        host='localhost',
+                                        database=os.getenv("MYSQL_DATABASE"))
+        except mysql.connector.Error as err:
+            raise err
+        print('Database Connected.')
 
     def create_task(self, title, desc, due_date, priority):
         """
