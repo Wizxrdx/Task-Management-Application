@@ -1,32 +1,35 @@
-from src.helper import Helper
+from src.helper import get_input
 from src.task import Task
 from src.database import get_db
+from datetime import datetime
 
 class TaskManager:
     def __init__(self, db):
         self.database = db
 
     def create_task(self):
-        task = Task()
-        task.set_title(Helper.get_input('Enter title: '))
+        # title
+        title = get_input('Enter title: ')
+        description = get_input('Enter description: ')
+        due_date = get_input('Enter due date (YYYY-MM-DD): ')
+        priority = get_input('Enter priority (Low, Medium, High): ')
 
-        # desc
-        task.set_description(Helper.get_input('Enter description: '))
-
-        # due_date
-        task.set_due_date(Helper.get_input('Enter due date (YYYY-MM-DD): '))
-
-        # priority
-        while task._priority_level is None:
-            x = Helper.get_input('Enter priority (Low, Medium, High): ')
-            task.set_priority(x)
+        task = Task(
+            title=title,
+            description=description,
+            due_date=due_date,
+            priority=priority,
+            creation=datetime.now()
+        )
 
         idx = self.database.create_task(
-            task._title,
-            task._description,
-            task._due_date,
-            task._priority_level
+            task.title,
+            task.description,
+            task.due_date,
+            task.priority,
+            task.creation
         )
+
         print(f'Task Created with id {idx}')
 
     def list_tasks(self):
