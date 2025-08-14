@@ -3,11 +3,8 @@ from src.task import Task
 from src.database import get_db
 
 class TaskManager:
-    def __init__(self):
-        self.database = None
-
-    def set_db(self, db):
-        self.database = get_db()
+    def __init__(self, db):
+        self.database = db
 
     def create_task(self):
         task = Task()
