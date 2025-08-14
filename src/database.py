@@ -2,8 +2,10 @@ from dotenv import load_dotenv
 import mysql.connector
 import os
 
+
 class Database:
     def __init__(self):
+        self.cnx = None
         """
             Connect to database and initialize tables database
         """
