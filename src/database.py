@@ -122,10 +122,19 @@ class Database:
             self.cnx.close()
             print('Database closed.')
 
+
+db = None
+
+def get_db():
+    global db
+    if db is None:
+        db = Database()
+    return db
+
 if __name__ == '__main__':
     # For Testing
 
-    db = Database()
+    db = get_db()
     # db.create_task('title 1', 'desc 1', '2025-08-10', 'Low', 'Pending')
     # for x in db.read_tasks(1, 5):
     #     print(x)

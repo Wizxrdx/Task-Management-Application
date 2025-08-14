@@ -1,5 +1,4 @@
 from datetime import datetime
-from src.database import Database
 
 
 class Task:

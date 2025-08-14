@@ -1,7 +1,15 @@
-from src.task import TaskManager
+from src.task_manager import TaskManager
+from src.database import get_db
 
 def main():
+    try:
+        db = get_db()
+    except Exception as e:
+        exit(e)
+        
     task_manager = TaskManager()
+    task_manager.set_db(db)
+
     while True:
         print('[1] Add a new task')
         print('[2] List all tasks')
