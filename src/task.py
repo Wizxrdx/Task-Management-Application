@@ -24,10 +24,10 @@ class Task:
         self._id = idx
         self._creation_timestamp = self._coerce_creation(creation)
         self._status = self._validate_status(status)
-        self.title = title
-        self.description = description
-        self.due_date = due_date
-        self.priority = priority
+        self._title = title
+        self._description = description
+        self._due_date = due_date
+        self._priority = priority
 
     def __str__(self):
         return (
@@ -39,8 +39,8 @@ class Task:
     def id(self):
         return self._id
 
-    @title.setter
-    def set_id(self, new_id: int):  # explicit to avoid accidental overwrite
+    @id.setter
+    def set_id(self, new_id: int):
         if self._id is not None and self._id != new_id:
             raise TaskValidationError('Task id already set; cannot change.')
         self._id = new_id
